@@ -15,7 +15,7 @@ drop table if exists tasks;
 create table tasks (
 	id SERIAL primary key,
 	title VARCHAR(100) not null,
-	description TEXT not null,
+	description TEXT,
 	status_id INTEGER references status(id)
 		on delete cascade,
 	user_id INTEGER references users(id)
