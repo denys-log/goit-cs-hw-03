@@ -17,7 +17,7 @@ create table tasks (
 	title VARCHAR(100) not null,
 	description TEXT,
 	status_id INTEGER references status(id)
-		on delete cascade,
+		on delete set null,
 	user_id INTEGER references users(id)
 		on delete cascade
 );
