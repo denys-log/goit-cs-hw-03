@@ -12,25 +12,27 @@ update tasks
 set status_id = 3 
 where id = 1;
 
-select * 
-from users 
-where id not in (
-  select user_id from tasks
+SELECT * 
+FROM users 
+WHERE id NOT IN (
+  SELECT DISTINCT user_id FROM tasks
 );
 
 insert into tasks (title, description, user_id, status_id)
 values ('new task', 'new task description', 1, 2);
 
-select * 
-from tasks 
-where status_id != 3;
+SELECT * 
+FROM tasks 
+WHERE status_id != (
+  SELECT id FROM status WHERE name = 'completed'
+);
 
 delete from tasks 
 where id = 7;
 
 select * 
 from users 
-where email like('%hnelson@example.net%');
+where email like('%@example.com%');
 
 update users 
 set fullname = 'John Rick' 
@@ -47,14 +49,16 @@ where u.email like('%@example.com');
 
 select * 
 from tasks 
-where description is not null;
+where description is null OR description = '';
 
-select * 
-from users u
-inner join tasks t on t.user_id = u.id
-where t.status_id = 2;
+SELECT u.*, t.*
+FROM users u
+INNER JOIN tasks t ON u.id = t.user_id
+INNER JOIN status s ON t.status_id = s.id
+WHERE s.name = 'in progress';
 
-select count(t) as total_tasks, u.id, u.email, u.fullname
-from users u
-left join tasks t on t.user_id = u.id
-group by u.id;
+SELECT u.fullname, COUNT(t.id) AS task_count
+FROM users u
+LEFT JOIN tasks t ON u.id = t.user_id
+GROUP BY u.fullname;
+
